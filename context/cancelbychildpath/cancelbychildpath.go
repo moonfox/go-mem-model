@@ -10,13 +10,12 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	fmt.Println("pass ctx from main to subgoFirst")
 	go subgoFirst(ctx)
 
 	time.Sleep(5 * time.Second)
 
-	cancel()
-	<-ctx.Done()
+	fmt.Println("notify exit")
+	cancel() // 不发生阻塞
 
 	for {
 		time.Sleep(1 * time.Second)
@@ -26,33 +25,33 @@ func main() {
 
 func subgoFirst(parent context.Context) {
 	ctx, _ := context.WithCancel(parent)
-	fmt.Println("pass ctx from subgoFirst to subgoSecond")
 	go subgoSecond(ctx)
 
+	i := 1
 	for {
-		time.Sleep(1 * time.Second)
-		fmt.Println("looping subgoFirst")
-
 		select {
 		case <-parent.Done():
 			fmt.Printf("subgoFirst exit:%s\n", parent.Err())
 			return
 		default:
+			fmt.Printf("looping subgoFirst times %d\n", i)
+			time.Sleep(1 * time.Second)
 		}
+		i++
 	}
 }
 
 func subgoSecond(parent context.Context) {
-
+	i := 1
 	for {
-		time.Sleep(1 * time.Second)
-		fmt.Println("looping subgoSecond")
-
 		select {
 		case <-parent.Done():
 			fmt.Printf("subgoSecond exit:%s\n", parent.Err())
 			return
 		default:
+			fmt.Printf("looping subgoSecond times %d\n", i)
+			time.Sleep(1 * time.Second)
 		}
+		i++
 	}
 }

@@ -24,7 +24,6 @@ func cancelMutiGo() {
 	time.Sleep(5 * time.Second)
 	cancelParent()
 
-	<-ctxParent.Done()
 	for {
 		time.Sleep(1 * time.Second)
 		fmt.Println("Continue...")
@@ -42,7 +41,6 @@ func cancelMutiGoWithDiffCtx() {
 
 	time.Sleep(5 * time.Second)
 	cancelParent()
-	<-ctxParent.Done()
 
 	for {
 		time.Sleep(1 * time.Second)
@@ -52,7 +50,6 @@ func cancelMutiGoWithDiffCtx() {
 
 func cancelGo(ctx context.Context, num int, cancel context.CancelFunc) {
 	i := 0
-	defer cancel()
 	for {
 		time.Sleep(1 * time.Second)
 		fmt.Printf("the number of goroutine: %d [%d]\n", num, i)
