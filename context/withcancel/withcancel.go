@@ -41,7 +41,7 @@ func sleepRandom_2(ctx context.Context) {
 func main() {
 
 	ctxParent, cancelParent := context.WithCancel(context.Background())
-	ctxChild, _ := context.WithCancel(ctxParent)
+	ctxChild, cancelChild := context.WithCancel(ctxParent)
 
 	stopChan := make(chan struct{})
 
@@ -53,7 +53,7 @@ func main() {
 		fmt.Println("stopChan received")
 	}
 	cancelParent()
-
+	cancelChild() // 可不写，写是为了不显示语法提示
 	for {
 		time.Sleep(1 * time.Second)
 		fmt.Println("Continue...")
