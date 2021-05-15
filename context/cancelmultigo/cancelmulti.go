@@ -24,7 +24,7 @@ func cancelMutiGo() {
 	time.Sleep(5 * time.Second)
 	cancelParent()
 
-	ctxParent.Done()
+	<-ctxParent.Done()
 	for {
 		time.Sleep(1 * time.Second)
 		fmt.Println("Continue...")
@@ -42,7 +42,7 @@ func cancelMutiGoWithDiffCtx() {
 
 	time.Sleep(5 * time.Second)
 	cancelParent()
-	ctxParent.Done()
+	<-ctxParent.Done()
 
 	for {
 		time.Sleep(1 * time.Second)
@@ -59,8 +59,7 @@ func cancelGo(ctx context.Context, num int, cancel context.CancelFunc) {
 
 		select {
 		case <-ctx.Done():
-			fmt.Printf("Why? %s", ctx.Err())
-			fmt.Printf(" %d canceled goroutine: [%d]\n", num, i)
+			fmt.Printf("%d canceled goroutine: [%d]: Why? %s \n", num, i, ctx.Err())
 
 			return
 		default:
